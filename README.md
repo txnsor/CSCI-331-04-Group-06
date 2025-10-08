@@ -2,9 +2,14 @@
 
 ## Abstract
 
+[INSERT ABSTRACT HERE]
+
 ## Developers
 
 - Cole Stowell (@costowell)
+- YOUR NAME HERE
+- YOUR NAME HERE
+- YOUR NAME HERE
 
 ## How to Run
 
