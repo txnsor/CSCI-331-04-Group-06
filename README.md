@@ -15,7 +15,7 @@
 
 1. Install [Python 3.13](https://www.python.org/downloads/release/python-3130/).
 
-2. Setup a `venv` with the following command
+2. Setup a `venv` with the following commands
 
 ```sh
 python -m venv .venv
