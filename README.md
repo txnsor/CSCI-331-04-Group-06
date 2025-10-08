@@ -1,0 +1,30 @@
+# 2048 AI Agent
+
+## Abstract
+
+## Developers
+
+- Cole Stowell (@costowell)
+
+## How to Run
+
+1. Install [Python 3.13](https://www.python.org/downloads/release/python-3130/).
+
+2. Setup a `venv` with the following command
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+```
+
+3. Install the dependencies
+
+```sh
+pip install -r requirements.txt
+```
+
+4. Run the project!
+
+```sh
+python main.py
+```
