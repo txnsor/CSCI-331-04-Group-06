@@ -1,0 +1,3 @@
+Python: Python 3.13 (latest)
+Dependencies:
+- tkinter
