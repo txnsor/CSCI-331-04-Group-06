@@ -1,3 +1,1 @@
-Python: Python 3.13 (latest)
-Dependencies:
-- tkinter
+delete me (the text not the file)
