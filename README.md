@@ -7,7 +7,7 @@
 ## Developers
 
 - Cole Stowell (@costowell)
-- YOUR NAME HERE
+- Kevin Daccache (@ke3646)
 - YOUR NAME HERE
 - YOUR NAME HERE
 
