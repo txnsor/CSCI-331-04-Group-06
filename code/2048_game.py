@@ -1,12 +1,16 @@
+# 2048 Model (to be used with a GUI view)
+# Implemented by Marc Browning
+
 import numpy as np
 from enum import Enum
+from random import randint
 
 # TODO: add dependencies to requirements.txt
 
 """
 The default size of the square grid in one direction.
 """
-DEFAULT_SIZE = 3
+DEFAULT_SIZE = 4
 
 """
 Enumeration for the direction of movement.
@@ -71,6 +75,40 @@ class Game:
             case DIRECTION.UP: self.grid = self.grid.T
             case DIRECTION.DOWN: self.grid = np.fliplr(self.grid).T
 
+    """
+    Randomly place a tile on the board.
+    """
+    def random_place_tile(self, value = 2):
+        while True:
+            row = randint(0, DEFAULT_SIZE - 1)
+            col = randint(0, DEFAULT_SIZE - 1)
+            if self.grid[row, col] == 0:
+                self.grid[row, col] = value
+                return
+    
+    """
+    Current total score.
+
+    TODO: possibly change this?
+    """
+    def score(self):
+        res = 0
+        for row in self.grid:
+            for val in row:
+                res += val
+        return res 
+    
+    """
+    Checks if the game is lost or not.
+
+    TODO: determine whether this is needed.
+    """
+    def is_game_lost(self):
+        for row in self.grid:
+            for val in row:
+                if (val == 0): return False
+        return True
+
 
 # testing
 
@@ -81,12 +119,15 @@ def main():
     game.grid[2, 1] = 2
     game.grid[1, 2] = 2
 
+    print("before move")
     print(game.grid)
-    print()
-
     game.move(DIRECTION.RIGHT)
-
+    print("after move (RIGHT)")
     print(game.grid)
+    game.random_place_tile()
+    print("random tile placed")
+    print(game.grid)
+    print(f"isGameLost? : {game.is_game_lost()}")
 
 if __name__ == "__main__": main()
 
