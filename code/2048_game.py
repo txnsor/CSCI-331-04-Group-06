@@ -25,7 +25,9 @@ class Game:
         # init grid
         self.grid = np.zeros([DEFAULT_SIZE, DEFAULT_SIZE])
     
-    def merge(self, dir : DIRECTION):
+    # helper functions
+
+    def __merge(self, dir : DIRECTION):
         """
         NOTE: default behavior is to merge LEFT, but any
         other directional input will use reverse and transpose
@@ -58,6 +60,43 @@ class Game:
             case DIRECTION.UP: self.grid = self.grid.T
             case DIRECTION.DOWN: self.grid = np.fliplr(self.grid).T
 
+    def __move_tiles(self, dir : DIRECTION):
+        """
+        Compress the grid in one direction.
+        """
+
+        match dir:
+            case DIRECTION.RIGHT:
+                # if RIGHT, reverse each row
+                self.grid = np.fliplr(self.grid)
+            case DIRECTION.UP:
+                # if UP, transpose
+                self.grid = self.grid.T
+            case DIRECTION.DOWN:
+                # if DOWN, transpose and then reverse
+                self.grid = np.fliplr(self.grid.T)
+
+        # move to left of arr
+        self.grid = np.array([
+            np.concatenate([row[row != 0], np.zeros(np.sum(row == 0))])
+            for row in self.grid
+        ])
+
+        # undo rearrangements
+        match dir:
+            case DIRECTION.RIGHT: self.grid = np.fliplr(self.grid)
+            case DIRECTION.UP: self.grid = self.grid.T
+            case DIRECTION.DOWN: self.grid = np.fliplr(self.grid).T
+
+    """
+    Make a 2048 move in a given direction
+    """
+    def move(self, dir : DIRECTION):
+        # MOVE -> MERGE -> MOVE guarantees things work properly
+        self.__move_tiles(dir)
+        self.__merge(dir)
+        self.__move_tiles(dir)
+
 
 # testing
 game = Game()
@@ -68,9 +107,7 @@ game.grid[1, 2] = 2
 
 print(game.grid)
 
-print()
-
-game.merge(DIRECTION.RIGHT)
+game.move(DIRECTION.RIGHT)
 
 print(game.grid)
 
