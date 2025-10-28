@@ -73,16 +73,21 @@ class Game:
 
 
 # testing
-game = Game()
 
-game.grid[2, 2] = 2
-game.grid[2, 1] = 2
-game.grid[1, 2] = 2
+def main():
+    game = Game()
 
-print(game.grid)
+    game.grid[2, 2] = 2
+    game.grid[2, 1] = 2
+    game.grid[1, 2] = 2
 
-game.move(DIRECTION.RIGHT)
+    print(game.grid)
+    print()
 
-print(game.grid)
+    game.move(DIRECTION.RIGHT)
+
+    print(game.grid)
+
+if __name__ == "__main__": main()
 
 
