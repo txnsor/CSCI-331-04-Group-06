@@ -1,1 +1,1 @@
-delete me (the text not the file)
+numpy==1.26.0

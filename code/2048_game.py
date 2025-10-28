@@ -85,6 +85,14 @@ class Game:
             if self.grid[row, col] == 0:
                 self.grid[row, col] = value
                 return
+            
+    # score helper function
+    def __non_empty_cells(self):
+        res = 0
+        for row in self.grid:
+            for val in row:
+                if val != 0: res += 1
+        return res
     
     """
     Current total score.
@@ -96,7 +104,8 @@ class Game:
         for row in self.grid:
             for val in row:
                 res += val
-        return res 
+        # added to disencourage filling the board
+        return res/self.__non_empty_cells()
     
     """
     Checks if the game is lost or not.
