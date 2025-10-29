@@ -118,6 +118,8 @@ class Game:
                 if (val == 0): return False
         return True
 
+    # get the coord pairs of all free spaces
+    def get_free_spaces(self): return np.argwhere(self.grid == 0)
 
 # testing
 
