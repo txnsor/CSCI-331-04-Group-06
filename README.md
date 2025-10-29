@@ -8,7 +8,7 @@
 
 - Cole Stowell (@costowell)
 - Kevin Daccache (@ke3646)
-- YOUR NAME HERE
+- Marc Browning (@txnsor)
 - YOUR NAME HERE
 
 ## How to Run
