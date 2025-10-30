@@ -54,9 +54,10 @@ class State_Graph:
         nodes = [self.root]
         while nodes:
             current = nodes.pop()
+            current.print_node()
+            print()
             for node in current.children:
                 nodes.append(node)
-                node.print_node()
 
 
 # yet another helper class
