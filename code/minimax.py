@@ -4,7 +4,7 @@ import game as game_model
 """
 The maximum depth the tree will generate to.
 """
-MAX_DEPTH = 2 # TODO: change this to a reasonable value
+MAX_DEPTH = 5 # TODO: change this to a reasonable value
 
 """
 Wrapper for a graph of game states, used for minimax.
@@ -18,7 +18,7 @@ class State_Graph:
         # TODO: do we need all of this info?
         self.root = Node(
             move_number % 2 == 0, 
-            Game_Data(game, None, 0, game.score()),
+            Game_Data(game, None, 0, None),
             [] # TODO: maybe replace with numpy array?
             )
         
@@ -32,20 +32,27 @@ class State_Graph:
             if (current_node.is_max):
                 # moves are L, R, U, D
                 for dir in game_model.DIRECTION:
+                    # copy to maintain internal state after move
                     game_copy = deepcopy(current_node.data.game)
                     game_copy.move(dir)
-                    new_child = Node(False, Game_Data(game_copy, dir, node_gen_depth, game_copy.score()), [])
+                    # generate a node
+                    new_child = Node(False, Game_Data(game_copy, dir, node_gen_depth, None), [])
+                    # children get to have a score value.
+                    if node_gen_depth == MAX_DEPTH: new_child.data.score = game_copy.score()
+                    # prune games that lose (TODO: can we do this for minimax?)
                     current_node.children.append(new_child)
                     nodes.append(new_child)
                 # moves are any free space
             else:
                 # TODO: debug this
-                for p in game_copy.get_free_spaces():
+                for p in current_node.data.game.get_free_spaces():
                     game_copy = deepcopy(current_node.data.game)
                     # TODO: debug this as well
                     game_copy.grid[p] = 2
-                    new_child = Node(True, Game_Data(game_copy.grid, p, node_gen_depth, game_copy.score()), [])
+                    new_child = Node(True, Game_Data(game_copy, p, node_gen_depth, None), [])
+                    if node_gen_depth == MAX_DEPTH: new_child.data.score = game_copy.score()
                     current_node.children.append(new_child)
+                    nodes.append(new_child)
 
     """
     Display graph data
@@ -58,7 +65,6 @@ class State_Graph:
             print()
             for node in current.children:
                 nodes.append(node)
-
 
 # yet another helper class
 class Game_Data:
@@ -83,7 +89,33 @@ class Node:
     def __str__(self): return f"data: {self.data}, is_max: {self.is_max}"
     def __repr__(self): return f"data: {self.data}, is_max: {self.is_max}"
 
+"""
+Compute minimax of a state graph.
+"""
+def minimax(state_graph):
+    return _minimax_recursive(state_graph.root)
 
+"""
+Recursive functionality of minimax.
+"""
+def _minimax_recursive(node):
+    # base case, child node
+    if not node.children: 
+        if node.data.score is None: node.data.score = node.data.game.score()
+        return node.data.score, []
+    
+    results = []
+    for child in node.children:
+        score, path = _minimax_recursive(child)
+        results.append((score, [child.data.last_move] + path))
+
+    if node.is_max:
+        res = max(results, key = lambda x : x[0])
+    else:
+        res = min(results, key = lambda x : x[0])
+
+    node.data.score = res[0]
+    return res[0], res[1]
 def main():
     # make a random game with three initial filled spaces
     game = game_model.Game()
@@ -91,6 +123,6 @@ def main():
     game.random_place_tile()
     game.random_place_tile(4)
     graph = State_Graph(game, 0)
-    graph.print_graph()
+    print(minimax(graph))
 
 if __name__ == "__main__": main()

@@ -48,11 +48,15 @@ class Game:
         ])
 
     """
-    Make a 2048 move in a given direction
+    Make a 2048 move in a given direction.
+
+    Changes the board, and returns a bool (did the board change)
     """
     def move(self, dir : DIRECTION):
 
-    # change any direction into a LEFT move
+        before_move = self.grid.copy()
+
+        # change any direction into a LEFT move
         match dir:
             case DIRECTION.RIGHT:
                 # if RIGHT, reverse each row
@@ -74,6 +78,8 @@ class Game:
             case DIRECTION.RIGHT: self.grid = np.fliplr(self.grid)
             case DIRECTION.UP: self.grid = self.grid.T
             case DIRECTION.DOWN: self.grid = np.fliplr(self.grid).T
+
+        return not np.array_equal(self.grid, before_move)
 
     """
     Randomly place a tile on the board.
@@ -106,20 +112,9 @@ class Game:
                 res += val
         # added to disencourage filling the board
         return res/self.__non_empty_cells()
-    
-    """
-    Checks if the game is lost or not.
-
-    TODO: determine whether this is needed.
-    """
-    def is_game_lost(self):
-        for row in self.grid:
-            for val in row:
-                if (val == 0): return False
-        return True
 
     # get the coord pairs of all free spaces
-    def get_free_spaces(self): return np.argwhere(self.grid == 0)
+    def get_free_spaces(self): return tuple(np.argwhere(self.grid == 0))
 
 # testing
 
