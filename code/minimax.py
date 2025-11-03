@@ -1,10 +1,13 @@
+# minimax.py
+# Implemented by Marc Browning
+
 from copy import deepcopy
 import game as game_model
 
 """
 The maximum depth the tree will generate to.
 """
-MAX_DEPTH = 5 # TODO: change this to a reasonable value
+MAX_DEPTH = 5
 
 """
 Wrapper for a graph of game states, used for minimax.
