@@ -9,12 +9,11 @@
 - Cole Stowell (@costowell)
 - Kevin Daccache (@ke3646)
 - Marc Browning (@txnsor)
-- YOUR NAME HERE
+- Ian Kopke (@ikopke23)
 
 ## How to Run
 
 1. Install [Python 3.13](https://www.python.org/downloads/release/python-3130/).
-
 2. Setup a `venv` with the following commands
 
 ```sh
