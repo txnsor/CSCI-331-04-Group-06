@@ -105,16 +105,25 @@ class Game:
 
     TODO: possibly change this?
     """
-    def score(self):
+    def score(self) -> float:
         res = 0
         for row in self.grid:
             for val in row:
                 res += val
         # added to disencourage filling the board
-        return res/self.__non_empty_cells()
+        return res * len(self.get_free_spaces())
 
     # get the coord pairs of all free spaces
-    def get_free_spaces(self): return tuple(np.argwhere(self.grid == 0))
+    def get_free_spaces(self) -> list[tuple[int, int]]:
+        return list(np.argwhere(self.grid == 0))
+
+    def copy(self):
+        new_game = Game()
+        new_game.grid = self.grid.copy()
+        return new_game
+
+    def is_over(self):
+        return len(self.get_free_spaces()) == 0
 
 # testing
 
