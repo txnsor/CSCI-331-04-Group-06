@@ -42,12 +42,22 @@ def alpha_beta_user(game: Game, depth: int, prune: bool, alpha: float, beta: flo
 
     return best, dir
 
+def get_adaptive_depth(game: Game) -> int:
+    free = len(game.get_free_spaces())
+    if free <= 2:
+        return 12
+    if free <= 4:
+        return 10
+    if free <= 10:
+        return 8
+    return 7
+
 def main():
     game = Game()
 
     while True:
         game.random_place_tile()
-        _, dir = alpha_beta_user(game, 7, True, float('-inf'), float('inf'))
+        _, dir = alpha_beta_user(game, get_adaptive_depth(game), True, float('-inf'), float('inf'))
 
         if dir == None:
             break
