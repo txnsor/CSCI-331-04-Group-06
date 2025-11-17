@@ -106,12 +106,42 @@ class Game:
     TODO: possibly change this?
     """
     def score(self) -> float:
-        res = 0
-        for row in self.grid:
-            for val in row:
-                res += val
-        # added to disencourage filling the board
-        return res * len(self.get_free_spaces())
+        # Base snake pattern (top-left)
+        weights = [
+            [15, 14, 13, 12],
+            [8,  9,  10, 11],
+            [7,  6,  5,  4],
+            [0,  1,  2,  3]
+        ]
+
+        def evaluate_orientation(grid, weights):
+            return sum(grid[i][j] * weights[i][j] for i in range(4) for j in range(4))
+
+        # Try all 4 rotations
+        scores = []
+
+        # Top-left
+        scores.append(evaluate_orientation(self.grid, weights))
+
+        # Top-right (flip horizontally)
+        weights_tr = [row[::-1] for row in weights]
+        scores.append(evaluate_orientation(self.grid, weights_tr))
+
+        # Bottom-left (flip vertically)
+        weights_bl = weights[::-1]
+        scores.append(evaluate_orientation(self.grid, weights_bl))
+
+        # Bottom-right (flip both)
+        weights_br = [row[::-1] for row in weights[::-1]]
+        scores.append(evaluate_orientation(self.grid, weights_br))
+
+        # Take the best orientation
+        best_weighted = max(scores)
+
+        # Empty cells bonus
+        empty_bonus = len(self.get_free_spaces()) ** 2.5 * 100
+
+        return best_weighted + empty_bonus
 
     # get the coord pairs of all free spaces
     def get_free_spaces(self) -> list[tuple[int, int]]:
