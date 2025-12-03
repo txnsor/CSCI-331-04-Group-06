@@ -34,6 +34,7 @@ class MainController:
         panel.pack(pady=5)
 
         tk.Label(panel, text="AI:").pack(side="left")
+        tk.Label(panel, text="Score: ").pack(side="left")
 
         tk.OptionMenu(panel, self.algo, "Minimax", "AlphaBeta").pack(side="left", padx=10)
         tk.Label(panel, text="Delay (ms):").pack(side="left", padx=10)
@@ -83,7 +84,7 @@ class MainController:
             path = minimax(graph)
             if not path or path[0] is None:
                 return
-            move = path[0]
+            move = path[1][0]
 
         else:
             depth = get_adaptive_depth(self.game)
@@ -96,7 +97,6 @@ class MainController:
         # Apply move
         self.game.move(move)
         self.game.random_place_tile()
-
         self.update_gui(f"AI Move: {move}")
 
         if self.game.is_over():

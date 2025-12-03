@@ -62,24 +62,35 @@ class TilesGUI:
         )
         self.message_label.pack()
 
+        self.score_label = tk.Label(
+            self.root,
+            text="Score: ",
+            font=("Helvetica", 16),
+            fg="#776e65",
+            bg=bg,
+            pady=10,
+        )
+        self.score_label.pack()
+
         self.model = None
 
 #updates board, scores and moves. 
     def update(self, model, message=""):
         grid = model.grid
-
+        count = 0
         for r in range(4):
             for c in range(4):
                 val = int(grid[r][c])
                 tile = self.tiles[r][c]
 
                 bg_color, fg_color = TILE_COLORS.get(val, ("#3c3a32", "white"))
-
+                self.tiles[r][c]
+                count += val
                 tile.config(
                     text="" if val == 0 else str(val),
                     bg=bg_color,
                     fg=fg_color,
                 )
-
+        self.score_label.config(text="Score: "+str(count))
         self.message_label.config(text=message)
         self.root.update_idletasks()
