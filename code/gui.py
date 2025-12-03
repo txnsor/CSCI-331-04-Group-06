@@ -1,70 +1,85 @@
-# gui.py
+# 2048 GUI
 # Implemented by Kevin Daccache
 
 import tkinter as tk
-from tkinter import font
 
-# Create main window
-root = tk.Tk()
-root.title("2048")
-
-
-
-def initialize_gui():
-    # Set background color
-    root.configure(bg="#bbada0")
-    # Add score, Highscore, and Game State
-    stats_frame = tk.Frame(root, bg="#bbada0", bd=10)
-    stats_frame.grid()
-    set_statistics(stats_frame)
-    # Create a frame for the game grid
-    grid_frame = tk.Frame(root, bg="#bbada0", bd=10)
-    grid_frame.grid(padx=10, pady=5)
-    # Create empty tiles (just placeholders)
-    starting_grid = True
-    set_grid_values(grid_frame, starting_grid)
-    # Add a Reset button
-    reset_button = tk.Button(
-        root, text="Reset", bg="#8f7a66", fg="white"
-    )
-    reset_button.grid(pady=5)
+TILE_COLORS = {
+    0:  ("#cdc1b4", "#776e65"),
+    2:  ("#eee4da", "#776e65"),
+    4:  ("#ede0c8", "#776e65"),
+    8:  ("#f2b179", "white"),
+    16: ("#f59563", "white"),
+    32: ("#f67c5f", "white"),
+    64: ("#f65e3b", "white"),
+    128: ("#edcf72", "#776e65"),
+    256: ("#edcc61", "#776e65"),
+    512: ("#edc850", "#776e65"),
+    1024: ("#edc53f", "white"),
+    2048: ("#edc22e", "white"),
+}
 
 
-def set_grid_values(grid_frame, starting_grid):
-    tiles = []
-    for i in range(4):
-        row = []
-        for j in range(4):
-            if(starting_grid):
+class TilesGUI:
+    """Tkinter grid renderer + status panel for 2048."""
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("2048 AI")
+
+        bg = "#bbada0"
+
+        # Main tile grid
+        self.frame = tk.Frame(self.root, bg=bg)
+        self.frame.pack(padx=10, pady=10)
+
+        self.tiles = []
+        for r in range(4):
+            row = []
+            for c in range(4):
                 tile = tk.Label(
-                    grid_frame, text="", width=8, height=4, bg="#cdc1b4", fg="#776e65", borderwidth=5, relief="groove",
+                    self.frame,
+                    text="",
+                    width=4,
+                    height=2,
+                    font=("Helvetica", 32, "bold"),
+                    bg="#cdc1b4",
+                    fg="#776e65",
+                    relief="ridge",
+                    borderwidth=5,
                 )
-            tile.grid(row=i, column=j, padx=5, pady=5)
-            row.append(tile)
-        tiles.append(row)
+                tile.grid(row=r, column=c, padx=5, pady=5)
+                row.append(tile)
+            self.tiles.append(row)
 
+        # Message label
+        self.message_label = tk.Label(
+            self.root,
+            text="",
+            font=("Helvetica", 16),
+            fg="#776e65",
+            bg=bg,
+            pady=10,
+        )
+        self.message_label.pack()
 
-def set_statistics(stats_frame):
-    score = 10
-    status = "Currently Running"
-    # Create Score Label
-    score_label = tk.Label(
-        stats_frame, text=("Score: \n" + str(score)), bg="#bbada0", font=("Times New Roman", 16)
-    )
-    score_label.grid(row=0, column=0, padx=5)
-    # Create High Score Label
-    high_score_label = tk.Label(
-        stats_frame, text=("High Score: \n" + str(score)), bg="#bbada0", font=("Times New Roman", 16)
-    )
-    high_score_label.grid(row=0, column=1, padx=5)
-    # Create game Status Label
-    game_status_label = tk.Label(
-        stats_frame, text=("Game Status: \n" + status), bg="#bbada0", font=("Times New Roman", 16)
-    )
-    game_status_label.grid(row=0, column=2, padx=5)
+        self.model = None
 
+#updates board, scores and moves. 
+    def update(self, model, message=""):
+        grid = model.grid
 
-#testing if Gui Functional
-if __name__ == '__main__':
-    initialize_gui()
-    root.mainloop()
+        for r in range(4):
+            for c in range(4):
+                val = int(grid[r][c])
+                tile = self.tiles[r][c]
+
+                bg_color, fg_color = TILE_COLORS.get(val, ("#3c3a32", "white"))
+
+                tile.config(
+                    text="" if val == 0 else str(val),
+                    bg=bg_color,
+                    fg=fg_color,
+                )
+
+        self.message_label.config(text=message)
+        self.root.update_idletasks()
