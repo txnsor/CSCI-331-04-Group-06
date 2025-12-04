@@ -27,8 +27,7 @@ Generic wrapper for 2048 grid with methods for movement.
 class Game:
     def __init__(self):
         # init grid
-        self.grid = np.zeros([DEFAULT_SIZE, DEFAULT_SIZE])
-    
+        self.grid = np.zeros([DEFAULT_SIZE, DEFAULT_SIZE])    
     # helper functions
 
     def __merge(self):
@@ -153,7 +152,15 @@ class Game:
         return new_game
 
     def is_over(self):
-        return len(self.get_free_spaces()) == 0
+        spaces_left = len(self.get_free_spaces())
+        if spaces_left != 0:
+            return False
+        for d in DIRECTION:
+            new = self.copy()
+            new.move(d)
+            if (spaces_left != new.get_free_spaces()):
+                return False
+        return True
 
 # testing
 
