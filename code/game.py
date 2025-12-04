@@ -84,7 +84,7 @@ class Game:
     Randomly place a tile on the board.
     """
     def random_place_tile(self, value = 2):
-        while True:
+        while len(self.get_free_spaces()) != 0:
             row = randint(0, DEFAULT_SIZE - 1)
             col = randint(0, DEFAULT_SIZE - 1)
             if self.grid[row, col] == 0:
@@ -152,13 +152,15 @@ class Game:
         return new_game
 
     def is_over(self):
+        # return len(self.get_free_spaces()) == 0
         spaces_left = len(self.get_free_spaces())
         if spaces_left != 0:
             return False
         for d in DIRECTION:
             new = self.copy()
             new.move(d)
-            if (spaces_left != new.get_free_spaces()):
+            # print(f"spaces_left: {spaces_left}, new.get_free_spaces(): {len(new.get_free_spaces())}, self.score(): {self.score()}, new.score(): {new.score()}")
+            if (spaces_left != len(new.get_free_spaces()) or self.score() != new.score()):
                 return False
         return True
 
@@ -179,7 +181,7 @@ def main():
     game.random_place_tile()
     print("random tile placed")
     print(game.grid)
-    print(f"isGameLost? : {game.is_game_lost()}")
+    print(f"isGameLost? : {game.is_over()}")
 
 if __name__ == "__main__": main()
 
