@@ -3,6 +3,7 @@
 
 from copy import deepcopy
 import game as game_model
+import time
 
 """
 The maximum depth the tree will generate to.
@@ -24,10 +25,12 @@ class State_Graph:
             Game_Data(game, None, 0, None),
             [] # TODO: maybe replace with numpy array?
             )
+        self.ct = 0
         
         depth = 0
         nodes = [self.root]
         while nodes:
+            self.ct += 1
             current_node = nodes.pop()
             node_gen_depth = current_node.data.depth + 1
             if node_gen_depth > MAX_DEPTH: continue
@@ -96,6 +99,9 @@ class Node:
 Compute minimax of a state graph.
 """
 def minimax(state_graph):
+    # temp1, temp2 = _minimax_recursive(state_graph.root)
+    # print(temp1, temp2)
+    # return temp1, temp2
     return _minimax_recursive(state_graph.root)
 
 """
@@ -118,14 +124,36 @@ def _minimax_recursive(node):
         res = min(results, key = lambda x : x[0])
 
     node.data.score = res[0]
+    # print(res[0], res[1])
     return res[0], res[1]
 def main():
     # make a random game with three initial filled spaces
-    game = game_model.Game()
-    game.random_place_tile()
-    game.random_place_tile()
-    game.random_place_tile(4)
-    graph = State_Graph(game, 0)
-    print(minimax(graph))
 
+
+    with open("../data/depth5Minimax.txt", "a") as file:
+        for i in range(50):
+            print("i = "+ str(i))
+            g= game_model.Game()
+            g.random_place_tile()
+            g.random_place_tile()
+            graph = State_Graph(g, 0)
+            # print(minimax(graph))
+            nodes = 0
+            start = time.time()
+            path = minimax(graph)
+            while (not g.is_over()):
+                # print(moveCt)
+                # print(g.grid)
+                # print(path)
+                g.move(path[1][0])
+                g.random_place_tile()
+                path = minimax(graph)
+                graph = State_Graph(g.copy())
+                # print(graph.ct)
+                nodes += graph.ct / 5 # this is because my is_over adds 4 for each node the ctr by 5 I believe
+            end = time.time()
+            # print(f"Time: {str(end - start):.2} Nodes: {str(nodes)}")
+            file.write(f"\nTime: {(end - start):.2f} Nodes: {str(nodes)} ")
+        # break
+        # file.close()
 if __name__ == "__main__": main()
